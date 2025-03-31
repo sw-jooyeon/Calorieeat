@@ -27,11 +27,11 @@ def parse_measurement(s: str):
 
 @st.cache_data(show_spinner=False)
 def load_fooddb():
-    path_abs = r"C:\Users\USER\hw1\음식DB.xlsx"
+    path_abs = r"C:\Users\USER\hw1\음식DB.csv"
     if os.path.exists(path_abs):
-         return pd.read_excel(path_abs)
+         return pd.read_csv(path_abs)
     else:
-         return pd.read_excel("음식DB.xlsx")
+         return pd.read_csv("음식DB.csv")
 
 @st.cache_data(show_spinner=False)
 def get_food_options():
