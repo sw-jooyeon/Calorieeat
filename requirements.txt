@@ -1,0 +1,7 @@
+streamlit
+requests
+urllib3
+pandas
+beautifulsoup4
+deep-translator
+python-dotenv
