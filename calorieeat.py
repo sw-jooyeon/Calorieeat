@@ -283,7 +283,7 @@ def display_recipes(recipes):
             st.subheader(rec["title"])
             st.write(rec["description"])
             st.write(f"준비시간: {rec['ready_time']} / 조리시간: {rec['cook_time']}")
-            st.markdown(f"[레시피\n보러가기]({rec['url']})")
+            st.markdown(f"[레시피 보러가기]({rec['url']})")
             with st.expander("재료 및 인분 정보 보기"):
                 details = fetch_recipe_details(rec["url"])
                 serving = details.get("serving", "")
@@ -317,8 +317,26 @@ def display_recipes(recipes):
                                 calorie_info = f"{energy} kcal"
                             ing_text = f"{ing_text} - {calorie_info}"
                         st.write(ing_text)
+                        
+def apply_button_style():
+    st.markdown("""
+        <style>
+        div.stButton > button {
+            width: 120px;
+            height: 60px;
+            text-align: center;
+            line-height: 1.2;
+            white-space: pre-line;
+            font-weight: bold;
+            float: right;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+                        
 
 def recipe_search_page():
+    apply_button_style()
+    
     header_cols = st.columns([8, 2])
     with header_cols[1]:
         if st.button("칼로리\n보러가기", key="switch_to_info"):
@@ -347,10 +365,10 @@ def recipe_search_page():
                     st.session_state.show_more = False
 
 def personal_info_page():
-    header_cols = st.columns([8, 2])
-    with header_cols[1]:
-        if st.button("레시피 보러가기", key="switch_to_search"):
-            st.session_state.page = "search"
+    apply_button_style()
+
+    if st.button("레시피\n보러가기", key="switch_to_search"):
+        st.session_state.page = "search"
 
     st.title("내 정보 입력하기")
     st.write("본인의 하루 적정 칼로리량과 섭취 칼로리를 계산해보세요.")
@@ -369,32 +387,29 @@ def personal_info_page():
     st.write("---")
     st.subheader("식사별 음식 선택")
 
-    # 아침
     breakfast = st.multiselect("아침", options=options, key="breakfast")
     b_cal, b_details = calculate_meal_calories(breakfast, fooddb_df)
-    st.write(f"**아침 칼로리:** {b_cal} kcal")
+    st.write(f"**아침 총 칼로리:** {b_cal} kcal")
 
-    # 점심
     lunch = st.multiselect("점심", options=options, key="lunch")
     l_cal, l_details = calculate_meal_calories(lunch, fooddb_df)
-    st.write(f"**점심 칼로리:** {l_cal} kcal")
+    st.write(f"**점심 총 칼로리:** {l_cal} kcal")
 
-    # 저녁
     dinner = st.multiselect("저녁", options=options, key="dinner")
     d_cal, d_details = calculate_meal_calories(dinner, fooddb_df)
-    st.write(f"**저녁 칼로리:** {d_cal} kcal")
+    st.write(f"**저녁 총 칼로리:** {d_cal} kcal")
 
     st.write("---")
+    st.subheader("칼로리 정보 요약")
     st.write(f"추천 하루 섭취 칼로리: **{recommended:.0f} kcal**")
 
     total_daily = b_cal + l_cal + d_cal
-    st.write(f"하루 총 섭취 칼로리: **{total_daily} kcal**")
+    st.write(f"**하루 총 섭취 칼로리:** {total_daily} kcal")
 
     if total_daily > recommended:
         st.write("🚨 권장 섭취량보다 많습니다.")
     else:
         st.write("🚨 권장 섭취량에 미치지 않습니다.")
-
 
 def calculate_meal_calories(meal_list, df):
     total = 0
