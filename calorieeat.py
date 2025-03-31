@@ -366,29 +366,35 @@ def personal_info_page():
     options = get_food_options()
     fooddb_df = load_fooddb()
 
-    # 먼저 아침, 점심, 저녁 칼로리 초기화
-    breakfast = st.multiselect("아침 ({b_cal} kcal)", options=options)
-    b_cal, b_details = calculate_meal_calories(breakfast, fooddb_df)
-    lunch = st.multiselect(f"점심 ({l_cal} kcal)", options=options)
-    l_cal, l_details = calculate_meal_calories(lunch, fooddb_df)
-    dinner = st.multiselect(f"저녁 ({d_cal} kcal)", options=options)
-    d_cal, d_details = calculate_meal_calories(dinner, fooddb_df)
+    st.write("---")
+    st.subheader("식사별 음식 선택")
 
-    # 아침 multiselect 라벨 업데이트 (최종 칼로리 반영)
-    st.write("하루 권장 칼로리 정보")
-    st.write(f"추천 하루 섭취 칼로리: {recommended:.0f} kcal")
-    # st.write("식사별 칼로리 정보")
-    # st.write("**아침:**", ", ".join(b_details), f"총 {b_cal} kcal")
-    # st.write("**점심:**", ", ".join(l_details), f"총 {l_cal} kcal")
-    # st.write("**저녁:**", ", ".join(d_details), f"총 {d_cal} kcal")
+    # 아침
+    breakfast = st.multiselect("아침", options=options, key="breakfast")
+    b_cal, b_details = calculate_meal_calories(breakfast, fooddb_df)
+    st.write(f"**아침 총 칼로리:** {b_cal} kcal")
+
+    # 점심
+    lunch = st.multiselect("점심", options=options, key="lunch")
+    l_cal, l_details = calculate_meal_calories(lunch, fooddb_df)
+    st.write(f"**점심 총 칼로리:** {l_cal} kcal")
+
+    # 저녁
+    dinner = st.multiselect("저녁", options=options, key="dinner")
+    d_cal, d_details = calculate_meal_calories(dinner, fooddb_df)
+    st.write(f"**저녁 총 칼로리:** {d_cal} kcal")
+
+    st.write("---")
+    st.subheader("칼로리 정보 요약")
+    st.write(f"추천 하루 섭취 칼로리: **{recommended:.0f} kcal**")
 
     total_daily = b_cal + l_cal + d_cal
-    st.write("### 하루 총 섭취 칼로리")
-    st.write(f"{total_daily} kcal")
+    st.write(f"**하루 총 섭취 칼로리:** {total_daily} kcal")
+
     if total_daily > recommended:
-        st.write("권장 섭취량보다 많습니다.")
+        st.write("🚨 권장 섭취량보다 많습니다.")
     else:
-        st.write("권장 섭취량에 미치지 않습니다.")
+        st.write("✅ 권장 섭취량에 미치지 않습니다.")
 
 
 def calculate_meal_calories(meal_list, df):
