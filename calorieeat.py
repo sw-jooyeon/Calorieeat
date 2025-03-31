@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
 import streamlit as st
 import requests
 import urllib3
 import pandas as pd
 from bs4 import BeautifulSoup
 from urllib.parse import quote
-import os
 import re
 from deep_translator import GoogleTranslator
-from dotenv import load_dotenv
+from config import USDA_API_KEY
 
-load_dotenv()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 USDA_API_KEY = os.getenv("USDA_API_KEY")
