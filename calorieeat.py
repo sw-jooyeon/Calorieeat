@@ -10,7 +10,6 @@ from config import USDA_API_KEY
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-USDA_API_KEY = os.getenv("USDA_API_KEY")
 if not USDA_API_KEY:
     st.error("USDA API KEY가 설정되어 있지 않습니다. 환경변수 USDA_API_KEY를 확인하세요.")
 
