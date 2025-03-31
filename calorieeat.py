@@ -44,8 +44,8 @@ def get_food_options():
 
 @st.cache_data(show_spinner=False)
 def load_nutrition_data():
-    filename1 = r"C:\Users\USER\hw1\농촌진흥청_국립식량과학원_통합식품영양성분정보(원재료성식품)_20250224.csv"
-    filename2 = r"C:\Users\USER\hw1\해양수산부_국립수산과학원_통합식품영양성분정보(원재료성식품)_20250113.csv"
+    filename1 = r"농촌진흥청_국립식량과학원_통합식품영양성분정보(원재료성식품)_20250224.csv"
+    filename2 = r"해양수산부_국립수산과학원_통합식품영양성분정보(원재료성식품)_20250113.csv"
     dfs = []
     if os.path.exists(filename1):
         try:
