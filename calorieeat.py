@@ -27,11 +27,8 @@ def parse_measurement(s: str):
 
 @st.cache_data(show_spinner=False)
 def load_fooddb():
-    path_abs = r"C:\Users\USER\hw1\음식DB.xlsx"
-    if os.path.exists(path_abs):
-        return pd.read_excel(path_abs)
-    else:
-        return pd.read_excel("음식DB.xlsx")
+    path_abs = r"음식DB.xlsx"
+    return pd.read_excel(path_abs)
 
 @st.cache_data(show_spinner=False)
 def get_food_options():
@@ -351,8 +348,10 @@ def personal_info_page():
     with header_cols[1]:
         if st.button("레시피 보러가기", key="switch_to_search"):
             st.session_state.page = "search"
-    st.title("내 정보")
+
+    st.title("내 정보 입력하기")
     st.write("본인의 하루 적정 칼로리량과 섭취 칼로리를 계산해보세요.")
+
     height = st.number_input("키 (cm)", min_value=100, max_value=250, value=170)
     weight = st.number_input("몸무게 (kg)", min_value=30, max_value=200, value=70)
     gender = st.selectbox("성별", options=["남", "여"])
@@ -360,34 +359,26 @@ def personal_info_page():
         recommended = weight * 35
     else:
         recommended = weight * 30
-    st.write(f"추천 하루 섭취 칼로리: {recommended:.0f} kcal")
-    
-    options = get_food_options()
-    breakfast = st.multiselect("아침", options=options)
-    lunch = st.multiselect("점심", options=options)
-    dinner = st.multiselect("저녁", options=options)
-    
-    fooddb_df = load_fooddb()
-    def calculate_meal_calories(meal_list, df):
-        total = 0
-        details = []
-        for food in meal_list:
-            s_val, energy = get_calorie_info(food, df)
-            if s_val and energy:
-                total += energy
-                details.append(f"{food}: {energy} kcal")
-            else:
-                details.append(food)
-        return total, details
 
+    options = get_food_options()
+    fooddb_df = load_fooddb()
+
+    # 먼저 아침, 점심, 저녁 칼로리 초기화
+    breakfast = st.multiselect("아침", options=options)
     b_cal, b_details = calculate_meal_calories(breakfast, fooddb_df)
+    lunch = st.multiselect(f"점심 ({b_cal} kcal)", options=options)
     l_cal, l_details = calculate_meal_calories(lunch, fooddb_df)
+    dinner = st.multiselect(f"저녁 ({l_cal} kcal)", options=options)
     d_cal, d_details = calculate_meal_calories(dinner, fooddb_df)
-    
-    st.write("### 식사별 칼로리 정보")
+
+    # 아침 multiselect 라벨 업데이트 (최종 칼로리 반영)
+    st.write("하루 권장 칼로리 정보")
+    st.write(f"추천 하루 섭취 칼로리: {recommended:.0f} kcal")
+    st.write("식사별 칼로리 정보")
     st.write("**아침:**", ", ".join(b_details), f"총 {b_cal} kcal")
     st.write("**점심:**", ", ".join(l_details), f"총 {l_cal} kcal")
     st.write("**저녁:**", ", ".join(d_details), f"총 {d_cal} kcal")
+
     total_daily = b_cal + l_cal + d_cal
     st.write("### 하루 총 섭취 칼로리")
     st.write(f"{total_daily} kcal")
@@ -395,6 +386,20 @@ def personal_info_page():
         st.write("권장 섭취량보다 많습니다.")
     else:
         st.write("권장 섭취량에 미치지 않습니다.")
+
+
+def calculate_meal_calories(meal_list, df):
+    total = 0
+    details = []
+    for food in meal_list:
+        s_val, energy = get_calorie_info(food, df)
+        if s_val and energy:
+            total += energy
+            details.append(f"{food}: {energy} kcal")
+        else:
+            details.append(food)
+    return total, details
+
 
 def main():
     if "page" not in st.session_state:
