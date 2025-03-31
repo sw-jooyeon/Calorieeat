@@ -5,3 +5,4 @@ pandas
 beautifulsoup4
 deep-translator
 python-dotenv
+openpyxl
