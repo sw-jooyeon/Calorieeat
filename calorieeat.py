@@ -4,6 +4,7 @@ import urllib3
 import pandas as pd
 from bs4 import BeautifulSoup
 from urllib.parse import quote
+import os
 import re
 from deep_translator import GoogleTranslator
 from config import USDA_API_KEY
