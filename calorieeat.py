@@ -28,7 +28,7 @@ def parse_measurement(s: str):
 @st.cache_data(show_spinner=False)
 def load_fooddb():
     path_abs = r"음식DB.xlsx"
-    return pd.read_csv(path_abs, encoding="utf-8-sig")
+    return pd.read_csv(path_abs, encoding="cp949")
 
 @st.cache_data(show_spinner=False)
 def get_food_options():
