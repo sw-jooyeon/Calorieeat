@@ -283,7 +283,7 @@ def display_recipes(recipes):
             st.subheader(rec["title"])
             st.write(rec["description"])
             st.write(f"준비시간: {rec['ready_time']} / 조리시간: {rec['cook_time']}")
-            st.markdown(f"[레시피 보러가기]({rec['url']})")
+            st.markdown(f"[레시피\n보러가기]({rec['url']})")
             with st.expander("재료 및 인분 정보 보기"):
                 details = fetch_recipe_details(rec["url"])
                 serving = details.get("serving", "")
@@ -321,7 +321,7 @@ def display_recipes(recipes):
 def recipe_search_page():
     header_cols = st.columns([8, 2])
     with header_cols[1]:
-        if st.button("칼로리 보러가기", key="switch_to_info"):
+        if st.button("칼로리\n보러가기", key="switch_to_info"):
             st.session_state.page = "info"
     query = st.text_input("검색어 입력")
     if query:
