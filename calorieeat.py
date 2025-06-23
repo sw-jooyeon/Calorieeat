@@ -339,7 +339,7 @@ def recipe_search_page():
     
     header_cols = st.columns([8, 2])
     with header_cols[1]:
-        if st.button("칼로리\n보러가기", key="switch_to_info"):
+        if st.button("칼로리\n계산하기", key="switch_to_info"):
             st.session_state.page = "info"
     query = st.text_input("검색어 입력")
     if query:
@@ -406,10 +406,12 @@ def personal_info_page():
     total_daily = b_cal + l_cal + d_cal
     st.write(f"**하루 총 섭취 칼로리:** {total_daily} kcal")
 
-    if total_daily > recommended:
+    if total_daily > (recommended + 100):
         st.write("🚨 권장 섭취량보다 많습니다.")
-    else:
+    elif total_daily < (recommended - 100):
         st.write("🚨 권장 섭취량에 미치지 않습니다.")
+    else:
+        st.write("✅ 권장 섭취량을 충족합니다.")
 
 def calculate_meal_calories(meal_list, df):
     total = 0
